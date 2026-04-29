@@ -13,7 +13,7 @@ from .Items import Spyro3Item, Spyro3ItemCategory, item_dictionary, key_item_nam
     item_name_groups
 from .Locations import Spyro3Location, Spyro3LocationCategory, location_tables, location_dictionary, hint_locations, \
     location_name_groups
-from .Options import Spyro3Option, GoalOptions, LifeBottleOptions, MoneybagsOptions, SparxUpgradeOptions, \
+from .Options import Spyro3Option, GoalOptions, CompanionLogicOptions, LifeBottleOptions, MoneybagsOptions, SparxUpgradeOptions, \
     SparxForGemsOptions, GemsanityOptions, LevelLockOptions, spyro_options_groups, PowerupLockOptions
 from .Hints import generateHints
 
@@ -271,19 +271,18 @@ class Spyro3World(World):
                 self.generation_options["level_lock_option"] == LevelLockOptions.ADD_GEM_REQS and \
                 (self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or \
                 self.generation_options["enable_gemsanity"] == GemsanityOptions.OFF):
-            # Vanilla requirements, plus numbers for levels without vanilla requirements.
-            vanilla_reqs = [3, 6, 10, 14, 17, 20, 22, 25, 30, 35, 36, 44, 50, 58, 64, 65, 67, 70, 80, 90]
-            random_reqs = []
-            open_sunrise_level = self.multiworld.random.randint(0, 3)
-            all_levels = list(range(20))
-            all_levels.remove(open_sunrise_level)
+            max_eggs = self.generation_options["egg_count"]
+            spacing = max_eggs / 20
+
+            requirements = []
+            req = spacing
+            while len(requirements) < 20:
+                requirements.append(math.floor(req))
+                req += spacing
+
+            picked_levels = 0
             unlocked_levels = []
-            if self.generation_options["starting_levels_count"] != 1:
-                unlocked_levels = self.multiworld.random.sample(all_levels, k=self.generation_options["starting_levels_count"] - 1)
-            unlocked_levels.append(open_sunrise_level)
-            for req in vanilla_reqs:
-                # 80% to 110% of vanilla requirements.
-                random_reqs.append(math.floor(req * (1 + 0.25 * (-0.6 + self.multiworld.random.random()))))
+
             if self.generation_options["open_world"]:
                 levels = [
                     "Sunny Villa", "Cloud Spires", "Molten Crater", "Seashell Shore", "Mushroom Speedway",
@@ -291,10 +290,23 @@ class Spyro3World(World):
                     "Frozen Altars", "Lost Fleet", "Fireworks Factory", "Charmed Ridge", "Honey Speedway",
                     "Crystal Islands", "Desert Ruins", "Haunted Tomb", "Dino Mines", "Harbor Speedway"
                 ]
-                self.multiworld.random.shuffle(random_reqs)
+                self.multiworld.random.shuffle(requirements)
                 for i in range(20):
-                    if i not in unlocked_levels:
-                        self.level_egg_requirements[levels[i]] = random_reqs[i]
+                    self.level_egg_requirements[levels[i]] = requirements[i]
+                # with how this spacing works, the highest requirement will be quite close to max_eggs
+                #   which puts it likely close to goal time. Choose it as the starting level to remedy this.
+                highest_req = max(self.level_egg_requirements, key=self.level_egg_requirements.get)
+                unlocked_levels.append(highest_req)
+                self.level_egg_requirements[highest_req] = 0
+                picked_levels += 1
+
+                while picked_levels < self.generation_options["starting_levels_count"]:
+                    # pick more levels to unlock, if needed. Randomly this time.
+                    new_unlock_level_name = self.multiworld.random.choice(levels)
+                    while new_unlock_level_name in unlocked_levels:
+                        new_unlock_level_name = self.multiworld.random.choice(levels)
+                    self.level_egg_requirements[new_unlock_level_name] = 0
+                    picked_levels += 1
             else:
                 random_levels = [
                     ["Sunny Villa", "Cloud Spires", "Molten Crater", "Seashell Shore"],
@@ -314,7 +326,7 @@ class Spyro3World(World):
                     self.multiworld.random.shuffle(level_set)
                     for level in level_set:
                         if i not in unlocked_levels:
-                            self.level_egg_requirements[level] = random_reqs[i]
+                            self.level_egg_requirements[level] = requirements[i]
                         i = i + 1
         elif self.generation_options["level_lock_option"] == LevelLockOptions.ADD_GEM_REQS and \
                 self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and \
@@ -384,6 +396,7 @@ class Spyro3World(World):
             self.generation_options["level_lock_option"] = slot_data["options"]["level_lock_option"]
             self.generation_options["starting_levels_count"] = slot_data["options"]["starting_levels_count"]
             self.generation_options["open_world"] = slot_data["options"]["open_world"]
+            self.generation_options["companion_logic"] = slot_data["options"]["companion_logic"]
             self.generation_options["moneybags_settings"] = slot_data["options"]["moneybags_settings"]
             self.generation_options["powerup_lock_settings"] = slot_data["options"]["powerup_lock_settings"]
             self.generation_options["enable_gemsanity"] = slot_data["options"]["enable_gemsanity"]
@@ -444,6 +457,7 @@ class Spyro3World(World):
             self.generation_options["level_lock_option"] = self.options.level_lock_option.value
             self.generation_options["starting_levels_count"] = self.options.starting_levels_count.value
             self.generation_options["open_world"] = self.options.open_world.value
+            self.generation_options["companion_logic"] = self.options.companion_logic.value
             self.generation_options["moneybags_settings"] = self.options.moneybags_settings.value
             self.generation_options["powerup_lock_settings"] = self.options.powerup_lock_settings.value
             self.generation_options["enable_gemsanity"] = self.options.enable_gemsanity.value
@@ -862,11 +876,17 @@ class Spyro3World(World):
     
     def set_rules(self) -> None:          
         def is_level_completed(self, level, state):
-            if self.generation_options["open_world"] and level not in [
+            level_list = [
                 "Super Bonus Round", "Crawdad Farm", "Spider Town", "Starfish Reef", "Bugbot Factory",
                 "Crystal Islands", "Desert Ruins", "Haunted Tomb", "Dino Mines", "Agent 9's Lab"
-            ]:
-                return True
+            ]
+            if self.generation_options["open_world"]:
+                if self.generation_options["companion_logic"] == CompanionLogicOptions.UNLOCKABLE:
+                    level_list.extend(["Sheila's Alp", "Sgt. Byrd's Base", "Bentley's Outpost"])
+
+                if level not in level_list:
+                    return True
+
             return state.has(level + " Complete", self.player)
         
         def is_boss_defeated(self, boss, state):
@@ -2757,6 +2777,7 @@ class Spyro3World(World):
                 "percent_extra_eggs": self.options.percent_extra_eggs.value,
                 "guaranteed_items": self.options.guaranteed_items.value,
                 "open_world": self.options.open_world.value,
+                "companion_logic": self.options.companion_logic.value,
                 "level_lock_option": self.options.level_lock_option.value,
                 "starting_levels_count": self.options.starting_levels_count.value,
                 "sorceress_door_requirement": self.options.sorceress_door_requirement.value,

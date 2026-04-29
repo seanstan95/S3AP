@@ -12,6 +12,10 @@ class GoalOptions():
     SCORCH = 6
     EGG_HUNT = 7
 
+class CompanionLogicOptions():
+    UNLOCKED = 0
+    UNLOCKABLE = 1
+
 class LifeBottleOptions():
     OFF = 0
     NORMAL = 1
@@ -110,6 +114,24 @@ class OpenWorldOption(Toggle):
     If Moneybags is Vanilla, companion unlocks will be free.
     Disables world keys."""
     display_name = "Open World Mode"
+
+class CompanionLogic(Choice):
+    # Probably would want to clean up this wording if it gets added as a main feature.
+    """When using open world mode, end-of-level eggs for the first 3 homeworlds
+     are awarded at the start. This results in companion subareas (such as Sheila's
+     area in Sunny Villa) being accessible even without having access to the companion's
+     original level, resulting in most levels being 100%'able as soon as you have access.
+     This option allows you to alter the seed generation logic to not include companion subareas
+     as being in logic until you have access to the companion's original level.
+     Important note: this is purely a logic adjustment. Physical access to companion subareas
+     is not prevented, meaning you can do them out of logic when this option is toggled.
+     Unlocked: Keeps companion subarea behavior as-is.
+     Unlockable: Alters logic to not include companion subareas until the companion's original level
+     is accessible."""
+    display_name = "Companion Logic"
+    default = CompanionLogicOptions.UNLOCKED
+    option_unlocked = CompanionLogicOptions.UNLOCKED
+    option_unlockable = CompanionLogicOptions.UNLOCKABLE
 
 class LevelLockOption(Choice):
     """Determines the rules for entering levels.
@@ -577,6 +599,7 @@ class Spyro3Option(PerGameCommonOptions):
     percent_extra_eggs: PercentExtraEggs
     guaranteed_items: GuaranteedItemsOption
     open_world: OpenWorldOption
+    companion_logic: CompanionLogic
     level_lock_option: LevelLockOption
     starting_levels_count: StartingLevels
     sorceress_door_requirement: SorceressDoorRequirement
@@ -672,6 +695,7 @@ spyro_options_groups = [
         "Game Progression",
         [
             OpenWorldOption,
+            CompanionLogic,
             LevelLockOption,
             StartingLevels,
             SorceressDoorRequirement,
