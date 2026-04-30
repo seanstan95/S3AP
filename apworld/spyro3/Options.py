@@ -16,6 +16,10 @@ class CompanionLogicOptions():
     UNLOCKED = 0
     UNLOCKABLE = 1
 
+class SparxLevelEggsOptions():
+    NORMAL = 0
+    SPREAD = 1
+
 class LifeBottleOptions():
     OFF = 0
     NORMAL = 1
@@ -132,6 +136,21 @@ class CompanionLogic(Choice):
     default = CompanionLogicOptions.UNLOCKED
     option_unlocked = CompanionLogicOptions.UNLOCKED
     option_unlockable = CompanionLogicOptions.UNLOCKABLE
+
+class SparxLevelEggs(Choice):
+    """When using open world mode, the first 3 Sparx levels are immediately accessible due to
+    homeworlds being marked as complete. This option allows you to instead spread out the Sparx
+    levels to be unlocked at 25%, 50%, and 75% of your total egg requirement amounts.
+    This reduces how much there is to do at the start of an open world seed.
+    Important note: this is purely a logic adjustment. Physical access to Sparx levels
+    is not prevented, meaning you can do them out of logic when this option is toggled.
+    Normal: Keeps the first 3 Sparx levels accessible at the start of open world seeds.
+    Spread: Spreads out the 3 Sparx levels based on your egg requirement amounts.
+    """
+    display_name = "Sparx Level Eggs"
+    default = SparxLevelEggsOptions.NORMAL
+    option_normal = SparxLevelEggsOptions.NORMAL
+    option_spread = SparxLevelEggsOptions.SPREAD
 
 class LevelLockOption(Choice):
     """Determines the rules for entering levels.
@@ -600,6 +619,7 @@ class Spyro3Option(PerGameCommonOptions):
     guaranteed_items: GuaranteedItemsOption
     open_world: OpenWorldOption
     companion_logic: CompanionLogic
+    sparx_level_eggs: SparxLevelEggs
     level_lock_option: LevelLockOption
     starting_levels_count: StartingLevels
     sorceress_door_requirement: SorceressDoorRequirement
@@ -696,6 +716,7 @@ spyro_options_groups = [
         [
             OpenWorldOption,
             CompanionLogic,
+            SparxLevelEggs,
             LevelLockOption,
             StartingLevels,
             SorceressDoorRequirement,
