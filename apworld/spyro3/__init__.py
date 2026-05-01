@@ -14,7 +14,7 @@ from .Items import Spyro3Item, Spyro3ItemCategory, item_dictionary, key_item_nam
 from .Locations import Spyro3Location, Spyro3LocationCategory, location_tables, location_dictionary, hint_locations, \
     location_name_groups
 from .Options import Spyro3Option, GoalOptions, CompanionLogicOptions, LifeBottleOptions, MoneybagsOptions, SparxUpgradeOptions, \
-    SparxForGemsOptions, GemsanityOptions, LevelLockOptions, spyro_options_groups, PowerupLockOptions, SparxLevelEggsOptions
+    SparxForGemsOptions, GemsanityOptions, LevelLockOptions, spyro_options_groups, PowerupLockOptions, SparxLevelRequirementOptions
 from .Hints import generateHints
 
 class Spyro3Settings(Group):
@@ -397,7 +397,7 @@ class Spyro3World(World):
             self.generation_options["starting_levels_count"] = slot_data["options"]["starting_levels_count"]
             self.generation_options["open_world"] = slot_data["options"]["open_world"]
             self.generation_options["companion_logic"] = slot_data["options"]["companion_logic"]
-            self.generation_options["sparx_level_eggs"] = slot_data["options"]["sparx_level_eggs"]
+            self.generation_options["sparx_level_requirements"] = slot_data["options"]["sparx_level_requirements"]
             self.generation_options["moneybags_settings"] = slot_data["options"]["moneybags_settings"]
             self.generation_options["powerup_lock_settings"] = slot_data["options"]["powerup_lock_settings"]
             self.generation_options["enable_gemsanity"] = slot_data["options"]["enable_gemsanity"]
@@ -459,7 +459,7 @@ class Spyro3World(World):
             self.generation_options["starting_levels_count"] = self.options.starting_levels_count.value
             self.generation_options["open_world"] = self.options.open_world.value
             self.generation_options["companion_logic"] = self.options.companion_logic.value
-            self.generation_options["sparx_level_eggs"] = self.options.sparx_level_eggs.value
+            self.generation_options["sparx_level_requirements"] = self.options.sparx_level_requirements.value
             self.generation_options["moneybags_settings"] = self.options.moneybags_settings.value
             self.generation_options["powerup_lock_settings"] = self.options.powerup_lock_settings.value
             self.generation_options["enable_gemsanity"] = self.options.enable_gemsanity.value
@@ -1011,7 +1011,7 @@ class Spyro3World(World):
                     return 0
                 level_gems = 400
             elif level == "Crawdad Farm":
-                if (not is_boss_defeated(self, "Buzz", state) or not state.has("Egg", self.player, sparx_level_requirement(self, "Crawdad Farm"))) or \
+                if (not is_boss_defeated(self, "Buzz", state) or not state.has("Egg", self.player, get_sparx_level_req(self, "Crawdad Farm"))) or \
                         (self.generation_options["enable_progressive_sparx_logic"] and not (
                                 has_sparx_health(self, 1, state) or is_glitched_logic(self, state))):
                     return 0
@@ -1082,7 +1082,7 @@ class Spyro3World(World):
                 level_gems = 500
             elif level == 'Spider Town':
                 if ((not is_boss_defeated(self, 'Spike', state) and
-                        not state.has("Egg", self.player, sparx_level_requirement(self, "Spider Town"))) or
+                        not state.has("Egg", self.player, get_sparx_level_req(self, "Spider Town"))) or
                         not is_level_completed(self, 'Crawdad Farm', state)):
                     return 0
                 level_gems = 200
@@ -1166,7 +1166,7 @@ class Spyro3World(World):
                 level_gems = 600
             elif level == 'Starfish Reef':
                 if ((not is_boss_defeated(self, 'Scorch', state) and
-                        not state.has("Egg", self.player, sparx_level_requirement(self, "Starfish Reef"))) or
+                        not state.has("Egg", self.player, get_sparx_level_req(self, "Starfish Reef"))) or
                         not is_level_completed(self, 'Spider Town', state)):
                     return 0
                 level_gems = 200
@@ -1293,10 +1293,10 @@ class Spyro3World(World):
             max_health += state.count("Progressive Sparx Health Upgrade", self.player)
             return max_health >= health
 
-        def sparx_level_requirement(self, level_name):
-            if self.generation_options["sparx_level_eggs"] == SparxLevelEggsOptions.NORMAL:
+        def get_sparx_level_req(self, level_name):
+            if self.generation_options["sparx_level_requirements"] == SparxLevelRequirementOptions.NORMAL:
                 return 0
-            elif self.generation_options["sparx_level_eggs"] == SparxLevelEggsOptions.SPREAD:
+            elif self.generation_options["sparx_level_requirements"] == SparxLevelRequirementOptions.SPREAD:
                 if level_name == "Crawdad Farm":
                     return self.generation_options["egg_count"] // 4
                 elif level_name == "Spider Town":
@@ -1613,13 +1613,13 @@ class Spyro3World(World):
         if self.generation_options["enable_progressive_sparx_logic"]:
             set_indirect_rule(self, "Crawdad Farm", lambda state:
             is_boss_defeated(self, "Buzz", state) and
-            state.has("Egg", self.player, sparx_level_requirement(self, "Crawdad Farm")) and
+            state.has("Egg", self.player, get_sparx_level_req(self, "Crawdad Farm")) and
             (has_sparx_health(self, 1, state) or
              is_glitched_logic(self, state)))
         else:
             set_indirect_rule(self, "Crawdad Farm", lambda state:
             is_boss_defeated(self, "Buzz", state) and
-            state.has("Egg", self.player, sparx_level_requirement(self, "Crawdad Farm")))
+            state.has("Egg", self.player, get_sparx_level_req(self, "Crawdad Farm")))
         # Gemsanity checks in Sparx levels are always accessible.
 
 
@@ -1905,12 +1905,12 @@ class Spyro3World(World):
         if self.generation_options["enable_progressive_sparx_logic"]:
             set_indirect_rule(self, "Spider Town", lambda state: is_boss_defeated(self, "Spike", state) and \
                     is_level_completed(self, 'Crawdad Farm', state) and \
-                    state.has("Egg", self.player, sparx_level_requirement(self, "Spider Town")) and
+                    state.has("Egg", self.player, get_sparx_level_req(self, "Spider Town")) and
                     (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)))
         else:
             set_indirect_rule(self, "Spider Town", lambda state:
             is_boss_defeated(self,"Spike", state) and
-            state.has("Egg", self.player, sparx_level_requirement(self, "Spider Town")) and
+            state.has("Egg", self.player, get_sparx_level_req(self, "Spider Town")) and
             is_level_completed(self, 'Crawdad Farm', state))
         # Sparx level gems are always accessible in gemsanity.
 
@@ -2328,12 +2328,12 @@ class Spyro3World(World):
             set_indirect_rule(self, "Starfish Reef", lambda state:
             is_boss_defeated(self, "Scorch", state) and
             is_level_completed(self, 'Spider Town', state) and
-            state.has("Egg", self.player, sparx_level_requirement(self, "Starfish Reef")) and
+            state.has("Egg", self.player, get_sparx_level_req(self, "Starfish Reef")) and
             (has_sparx_health(self, 2, state) or is_glitched_logic(self, state)))
         else:
             set_indirect_rule(self, "Starfish Reef", lambda state:
             is_boss_defeated(self,"Scorch", state) and
-            state.has("Egg", self.player, sparx_level_requirement(self, "Starfish Reef")) and
+            state.has("Egg", self.player, get_sparx_level_req(self, "Starfish Reef")) and
             is_level_completed(self, 'Spider Town', state))
         # Sparx level gems are always accessible in gemsanity.
 
@@ -2809,7 +2809,7 @@ class Spyro3World(World):
                 "guaranteed_items": self.options.guaranteed_items.value,
                 "open_world": self.options.open_world.value,
                 "companion_logic": self.options.companion_logic.value,
-                "sparx_level_eggs": self.options.sparx_level_eggs.value,
+                "sparx_level_requirements": self.options.sparx_level_requirements.value,
                 "level_lock_option": self.options.level_lock_option.value,
                 "starting_levels_count": self.options.starting_levels_count.value,
                 "sorceress_door_requirement": self.options.sorceress_door_requirement.value,

@@ -16,7 +16,7 @@ class CompanionLogicOptions():
     UNLOCKED = 0
     UNLOCKABLE = 1
 
-class SparxLevelEggsOptions():
+class SparxLevelRequirementOptions():
     NORMAL = 0
     SPREAD = 1
 
@@ -137,7 +137,7 @@ class CompanionLogic(Choice):
     option_unlocked = CompanionLogicOptions.UNLOCKED
     option_unlockable = CompanionLogicOptions.UNLOCKABLE
 
-class SparxLevelEggs(Choice):
+class SparxLevelRequirements(Choice):
     """When using open world mode, the first 3 Sparx levels are immediately accessible due to
     homeworlds being marked as complete. This option allows you to instead spread out the Sparx
     levels to be unlocked at 25%, 50%, and 75% of your total egg requirement amounts.
@@ -147,10 +147,10 @@ class SparxLevelEggs(Choice):
     Normal: Keeps the first 3 Sparx levels accessible at the start of open world seeds.
     Spread: Spreads out the 3 Sparx levels based on your egg requirement amounts.
     """
-    display_name = "Sparx Level Eggs"
-    default = SparxLevelEggsOptions.NORMAL
-    option_normal = SparxLevelEggsOptions.NORMAL
-    option_spread = SparxLevelEggsOptions.SPREAD
+    display_name = "Sparx Level Requirements"
+    default = SparxLevelRequirementOptions.NORMAL
+    option_normal = SparxLevelRequirementOptions.NORMAL
+    option_spread = SparxLevelRequirementOptions.SPREAD
 
 class LevelLockOption(Choice):
     """Determines the rules for entering levels.
@@ -619,7 +619,7 @@ class Spyro3Option(PerGameCommonOptions):
     guaranteed_items: GuaranteedItemsOption
     open_world: OpenWorldOption
     companion_logic: CompanionLogic
-    sparx_level_eggs: SparxLevelEggs
+    sparx_level_requirements: SparxLevelRequirements
     level_lock_option: LevelLockOption
     starting_levels_count: StartingLevels
     sorceress_door_requirement: SorceressDoorRequirement
@@ -716,7 +716,7 @@ spyro_options_groups = [
         [
             OpenWorldOption,
             CompanionLogic,
-            SparxLevelEggs,
+            SparxLevelRequirements,
             LevelLockOption,
             StartingLevels,
             SorceressDoorRequirement,
