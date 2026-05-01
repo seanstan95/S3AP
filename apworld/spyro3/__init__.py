@@ -1011,8 +1011,9 @@ class Spyro3World(World):
                     return 0
                 level_gems = 400
             elif level == "Crawdad Farm":
-                if not is_boss_defeated(self, "Buzz", state) or \
-                        (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 1, state) or is_glitched_logic(self, state))):
+                if (not is_boss_defeated(self, "Buzz", state) or not state.has("Egg", self.player, sparx_level_requirement(self, "Crawdad Farm"))) or \
+                        (self.generation_options["enable_progressive_sparx_logic"] and not (
+                                has_sparx_health(self, 1, state) or is_glitched_logic(self, state))):
                     return 0
                 level_gems = 200
                 ignore_sparx_restrictions = True
@@ -1080,7 +1081,9 @@ class Spyro3World(World):
                     return 0
                 level_gems = 500
             elif level == 'Spider Town':
-                if not is_boss_defeated(self, 'Spike', state) or not is_level_completed(self, 'Crawdad Farm', state):
+                if ((not is_boss_defeated(self, 'Spike', state) and
+                        not state.has("Egg", self.player, sparx_level_requirement(self, "Spider Town"))) or
+                        not is_level_completed(self, 'Crawdad Farm', state)):
                     return 0
                 level_gems = 200
                 ignore_sparx_restrictions = True
@@ -1162,7 +1165,9 @@ class Spyro3World(World):
                     return 0
                 level_gems = 600
             elif level == 'Starfish Reef':
-                if not is_boss_defeated(self, 'Scorch', state) or not is_level_completed(self, 'Spider Town', state):
+                if ((not is_boss_defeated(self, 'Scorch', state) and
+                        not state.has("Egg", self.player, sparx_level_requirement(self, "Starfish Reef"))) or
+                        not is_level_completed(self, 'Spider Town', state)):
                     return 0
                 level_gems = 200
                 ignore_sparx_restrictions = True
@@ -1293,13 +1298,10 @@ class Spyro3World(World):
                 return 0
             elif self.generation_options["sparx_level_eggs"] == SparxLevelEggsOptions.SPREAD:
                 if level_name == "Crawdad Farm":
-                    print(f"returning {self.generation_options['egg_count'] // 4} for crawdad farm")
                     return self.generation_options["egg_count"] // 4
                 elif level_name == "Spider Town":
-                    print(f"returning {self.generation_options['egg_count'] // 2} for spider town")
                     return self.generation_options["egg_count"] // 2
                 elif level_name == "Starfish Reef":
-                    print(f"returning {(self.generation_options['egg_count'] // 4) * 3} for starfish reef")
                     return (self.generation_options["egg_count"] // 4) * 3
             
         def set_indirect_rule(self, regionName, rule):
