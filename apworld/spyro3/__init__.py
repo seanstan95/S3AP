@@ -1011,12 +1011,12 @@ class Spyro3World(World):
                     return 0
                 level_gems = 400
             elif level == "Crawdad Farm":
-                if (not is_boss_defeated(self, "Buzz", state) or not state.has("Egg", self.player, get_sparx_level_req(self, "Crawdad Farm"))) or \
-                        (self.generation_options["enable_progressive_sparx_logic"] and not (
-                                has_sparx_health(self, 1, state) or is_glitched_logic(self, state))):
+                if (is_boss_defeated(self, "Buzz", state) and
+                        state.has("Egg", self.player, get_sparx_level_req(self, "Crawdad Farm"))):
+                    level_gems = 200
+                    ignore_sparx_restrictions = True
+                else:
                     return 0
-                level_gems = 200
-                ignore_sparx_restrictions = True
             elif level == 'Midday Gardens':
                 if not is_boss_defeated(self, "Buzz", state) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 1, state)):
@@ -1081,12 +1081,13 @@ class Spyro3World(World):
                     return 0
                 level_gems = 500
             elif level == 'Spider Town':
-                if ((not is_boss_defeated(self, 'Spike', state) and
-                        not state.has("Egg", self.player, get_sparx_level_req(self, "Spider Town"))) or
-                        not is_level_completed(self, 'Crawdad Farm', state)):
+                if (is_boss_defeated(self, "Spike", state) and
+                        state.has("Egg", self.player, get_sparx_level_req(self, "Spider Town")) and
+                        is_level_completed(self, "Crawdad Farm", state)):
+                    level_gems = 200
+                    ignore_sparx_restrictions = True
+                else:
                     return 0
-                level_gems = 200
-                ignore_sparx_restrictions = True
             elif level == 'Evening Lake':
                 if not is_boss_defeated(self, 'Spike', state) or (self.generation_options["enable_world_keys"] and not has_world_keys(self, 2, state)):
                     return 0
@@ -1165,12 +1166,13 @@ class Spyro3World(World):
                     return 0
                 level_gems = 600
             elif level == 'Starfish Reef':
-                if ((not is_boss_defeated(self, 'Scorch', state) and
-                        not state.has("Egg", self.player, get_sparx_level_req(self, "Starfish Reef"))) or
-                        not is_level_completed(self, 'Spider Town', state)):
+                if (is_boss_defeated(self, "Scorch", state) and
+                        state.has("Egg", self.player, get_sparx_level_req(self, "Starfish Reef")) and
+                        is_level_completed(self, "Spider Town", state)):
+                    level_gems = 200
+                    ignore_sparx_restrictions = True
+                else:
                     return 0
-                level_gems = 200
-                ignore_sparx_restrictions = True
             elif level == 'Midnight Mountain':
                 if not is_boss_defeated(self, 'Scorch', state) or (self.generation_options["enable_world_keys"] and not has_world_keys(self, 3, state)):
                     return 0
@@ -1236,10 +1238,12 @@ class Spyro3World(World):
                     return 0
                 level_gems = 700
             elif level == 'Bugbot Factory':
-                if not is_boss_defeated(self, 'Sorceress', state) or not is_level_completed(self, 'Starfish Reef', state):
+                if (is_boss_defeated(self, "Sorceress", state) and
+                        is_level_completed(self, "Starfish Reef", state)):
+                    level_gems = 200
+                    ignore_sparx_restrictions = True
+                else:
                     return 0
-                level_gems = 200
-                ignore_sparx_restrictions = True
             elif level == 'Super Bonus Round':
                 if not state.has("Egg", self.player, self.generation_options["sbr_door_egg_requirement"]) or not has_gems_for_sbr(self, state):
                     return 0
