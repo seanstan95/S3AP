@@ -127,6 +127,10 @@ class Spyro3World(World):
     # TODO: Remember to keep this False.
     PRINT_GEM_REQS = False  # Prints out the logic for each gem on generating a seed. Not for production use.
 
+    def has_trick(self, trick):
+        # Just a helper function to make checking for tricks a bit more readable in the code
+        # Also has upside of less refactoring if the option name is to ever change
+        return trick in self.generation_options["enable_tricks"]
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
@@ -422,38 +426,9 @@ class Spyro3World(World):
                 "enable_progressive_sparx_health"]
             self.generation_options["require_sparx_for_max_gems"] = slot_data["options"]["require_sparx_for_max_gems"]
             self.generation_options["percent_extra_eggs"] = slot_data["options"]["percent_extra_eggs"]
-            self.generation_options["logic_cloud_backwards"] = slot_data["options"]["logic_cloud_backwards"]
-            self.generation_options["logic_sheila_early"] = slot_data["options"]["logic_sheila_early"]
             self.generation_options["max_total_gem_checks"] = slot_data["options"]["max_total_gem_checks"]
-            self.generation_options["logic_byrd_early"] = slot_data["options"]["logic_byrd_early"]
-            self.generation_options["logic_sorceress_early"] = slot_data["options"]["logic_sorceress_early"]
-            self.generation_options["logic_bentley_early"] = slot_data["options"]["logic_bentley_early"]
-            self.generation_options["logic_spooky_no_moneybags"] = slot_data["options"]["logic_spooky_no_moneybags"]
-            self.generation_options["logic_molten_thieves_no_moneybags"] = slot_data["options"][
-                "logic_molten_thieves_no_moneybags"]
-            self.generation_options["logic_charmed_no_moneybags"] = slot_data["options"]["logic_charmed_no_moneybags"]
-            self.generation_options["logic_desert_no_moneybags"] = slot_data["options"]["logic_desert_no_moneybags"]
-            self.generation_options["logic_frozen_cat_hockey_no_moneybags"] = slot_data["options"][
-                "logic_frozen_cat_hockey_no_moneybags"]
-            self.generation_options["logic_crystal_no_moneybags"] = slot_data["options"]["logic_crystal_no_moneybags"]
-            self.generation_options["logic_sunny_sheila_early"] = slot_data["options"]["logic_sunny_sheila_early"]
-            self.generation_options["logic_molten_early"] = slot_data["options"]["logic_molten_early"]
-            self.generation_options["logic_molten_byrd_early"] = slot_data["options"]["logic_molten_byrd_early"]
-            self.generation_options["logic_seashell_early"] = slot_data["options"]["logic_seashell_early"]
-            self.generation_options["logic_seashell_sheila_early"] = slot_data["options"]["logic_seashell_sheila_early"]
-            self.generation_options["logic_mushroom_early"] = slot_data["options"]["logic_mushroom_early"]
-            self.generation_options["logic_spooky_early"] = slot_data["options"]["logic_spooky_early"]
-            self.generation_options["logic_bamboo_early"] = slot_data["options"]["logic_bamboo_early"]
-            self.generation_options["logic_bamboo_bentley_early"] = slot_data["options"]["logic_bamboo_bentley_early"]
-            self.generation_options["logic_country_early"] = slot_data["options"]["logic_country_early"]
-            self.generation_options["logic_fireworks_early"] = slot_data["options"]["logic_fireworks_early"]
-            self.generation_options["logic_fireworks_agent_9_early"] = slot_data["options"][
-                "logic_fireworks_agent_9_early"]
-            self.generation_options["logic_charmed_early"] = slot_data["options"]["logic_charmed_early"]
-            self.generation_options["logic_honey_early"] = slot_data["options"]["logic_honey_early"]
-            self.generation_options["logic_dino_agent_9_early"] = slot_data["options"]["logic_dino_agent_9_early"]
-            self.generation_options["logic_frozen_bentley_early"] = slot_data["options"]["logic_frozen_bentley_early"]
             self.generation_options["trap_filler_percent"] = 0
+            self.generation_options["enable_tricks"] = slot_data["options"]["enable_tricks"]
         else:
             self.generation_options["level_lock_option"] = self.options.level_lock_option.value
             self.generation_options["starting_levels_count"] = self.options.starting_levels_count.value
@@ -482,35 +457,9 @@ class Spyro3World(World):
             self.generation_options["enable_progressive_sparx_health"] = self.options.enable_progressive_sparx_health.value
             self.generation_options["require_sparx_for_max_gems"] = self.options.require_sparx_for_max_gems.value
             self.generation_options["percent_extra_eggs"] = self.options.percent_extra_eggs.value
-            self.generation_options["logic_cloud_backwards"] = self.options.logic_cloud_backwards.value
-            self.generation_options["logic_sheila_early"] = self.options.logic_sheila_early.value
             self.generation_options["max_total_gem_checks"] = self.options.max_total_gem_checks.value
-            self.generation_options["logic_byrd_early"] = self.options.logic_byrd_early.value
-            self.generation_options["logic_sorceress_early"] = self.options.logic_sorceress_early.value
-            self.generation_options["logic_bentley_early"] = self.options.logic_bentley_early.value
-            self.generation_options["logic_spooky_no_moneybags"] = self.options.logic_spooky_no_moneybags.value
-            self.generation_options["logic_molten_thieves_no_moneybags"] = self.options.logic_molten_thieves_no_moneybags.value
-            self.generation_options["logic_charmed_no_moneybags"] = self.options.logic_charmed_no_moneybags.value
-            self.generation_options["logic_desert_no_moneybags"] = self.options.logic_desert_no_moneybags.value
-            self.generation_options["logic_frozen_cat_hockey_no_moneybags"] = self.options.logic_frozen_cat_hockey_no_moneybags.value
-            self.generation_options["logic_crystal_no_moneybags"] = self.options.logic_crystal_no_moneybags.value
-            self.generation_options["logic_sunny_sheila_early"] = self.options.logic_sunny_sheila_early.value
-            self.generation_options["logic_molten_early"] = self.options.logic_molten_early.value
-            self.generation_options["logic_molten_byrd_early"] = self.options.logic_molten_byrd_early.value
-            self.generation_options["logic_seashell_early"] = self.options.logic_seashell_early.value
-            self.generation_options["logic_seashell_sheila_early"] = self.options.logic_seashell_sheila_early.value
-            self.generation_options["logic_mushroom_early"] = self.options.logic_mushroom_early.value
-            self.generation_options["logic_spooky_early"] = self.options.logic_spooky_early.value
-            self.generation_options["logic_bamboo_early"] = self.options.logic_bamboo_early.value
-            self.generation_options["logic_bamboo_bentley_early"] = self.options.logic_bamboo_bentley_early.value
-            self.generation_options["logic_country_early"] = self.options.logic_country_early.value
-            self.generation_options["logic_fireworks_early"] = self.options.logic_fireworks_early.value
-            self.generation_options["logic_fireworks_agent_9_early"] = self.options.logic_fireworks_agent_9_early.value
-            self.generation_options["logic_charmed_early"] = self.options.logic_charmed_early.value
-            self.generation_options["logic_honey_early"] = self.options.logic_honey_early.value
-            self.generation_options["logic_dino_agent_9_early"] = self.options.logic_dino_agent_9_early.value
-            self.generation_options["logic_frozen_bentley_early"] = self.options.logic_frozen_bentley_early.value
             self.generation_options["trap_filler_percent"] = self.options.trap_filler_percent.value
+            self.generation_options["enable_tricks"] = self.options.enable_tricks.value
 
         is_ut = getattr(self.multiworld, "generation_is_fake", False)
 
@@ -590,9 +539,9 @@ class Spyro3World(World):
                 self.enabled_hint_locations = self.multiworld.random.sample(hint_locations, self.generation_options["zoe_gives_hints"])
 
         # Prevent restrictive starts.
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_cloud_backwards"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("cloud_backwards"):
             self.multiworld.early_items[self.player]["Moneybags Unlock - Cloud Spires Bellows"] = 1
-        if self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_sheila_early"]:
+        if self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("sheila_early"):
             self.multiworld.early_items[self.player]["Moneybags Unlock - Sheila"] = 1
         if self.generation_options["open_world"] and self.generation_options["enable_progressive_sparx_health"] not in [SparxUpgradeOptions.OFF, SparxUpgradeOptions.TRUE_SPARXLESS] and self.generation_options["enable_progressive_sparx_logic"]:
             self.multiworld.early_items[self.player]["Progressive Sparx Health Upgrade"] = 1
@@ -840,17 +789,17 @@ class Spyro3World(World):
             item_classification = ItemClassification.progression
             # Moneybags unlocks the player says they don't need are useful, not progression.
             # No way to skip into Agent 9 early, and skipping into Nancy is missable.
-            if "logic_sheila_early" in self.generation_options and (
-                    name == "Moneybags Unlock - Sheila" and self.generation_options["logic_sheila_early"] or
-                    name == "Moneybags Unlock - Sgt. Byrd" and self.generation_options["logic_byrd_early"] or
-                    name == "Moneybags Unlock - Bentley" and self.generation_options["logic_bentley_early"] or
-                    name == "Moneybags Unlock - Cloud Spires Bellows" and self.generation_options["logic_cloud_backwards"] or
-                    name == "Moneybags Unlock - Spooky Swamp Door" and self.generation_options["logic_spooky_no_moneybags"] or
-                    name == "Moneybags Unlock - Molten Crater Thieves Door" and self.generation_options["logic_molten_thieves_no_moneybags"] or
-                    name == "Moneybags Unlock - Charmed Ridge Stairs" and self.generation_options["logic_charmed_no_moneybags"] or
-                    name == "Moneybags Unlock - Desert Ruins Door" and self.generation_options["logic_desert_no_moneybags"] or
-                    name == "Moneybags Unlock - Frozen Altars Cat Hockey Door" and self.generation_options["logic_frozen_cat_hockey_no_moneybags"] or
-                    name == "Moneybags Unlock - Crystal Islands Bridge" and self.generation_options["logic_crystal_no_moneybags"] or
+            # todo: this had *if "logic_sheila_early" in self.generation_options at the start. Redundant since always there? I removed it to see what happens
+            if (name == "Moneybags Unlock - Sheila" and self.has_trick("sheila_early") or
+                    name == "Moneybags Unlock - Sgt. Byrd" and self.has_trick("byrd_early") or
+                    name == "Moneybags Unlock - Bentley" and self.has_trick("bentley_early") or
+                    name == "Moneybags Unlock - Cloud Spires Bellows" and self.has_trick("cloud_backwards") or
+                    name == "Moneybags Unlock - Spooky Swamp Door" and self.has_trick("spooky_no_moneybags") or
+                    name == "Moneybags Unlock - Molten Crater Thieves Door" and self.has_trick("molten_thieves_no_moneybags") or
+                    name == "Moneybags Unlock - Charmed Ridge Stairs" and self.has_trick("charmed_no_moneybags") or
+                    name == "Moneybags Unlock - Desert Ruins Door" and self.has_trick("desert_no_moneybags") or
+                    name == "Moneybags Unlock - Frozen Altars Cat Hockey Door" and self.has_trick("frozen_cat_hockey_no_moneybags") or
+                    name == "Moneybags Unlock - Crystal Islands Bridge" and self.has_trick("crystal_no_moneybags") or
                     name == "Moneybags Unlock - Spooky Swamp Door" and self.generation_options["open_world"] or
                     name == "Moneybags Unlock - Charmed Ridge Stairs" and self.generation_options["open_world"]
                 ):
@@ -969,7 +918,7 @@ class Spyro3World(World):
                 # Sheila's area has 89 gems, skateboarding has 92.  All skateboarding gems are available regardless
                 # of Hunter's state.
                 level_gems = 311
-                if self.generation_options["logic_sunny_sheila_early"] or is_level_completed(self, "Sheila's Alp", state):
+                if self.has_trick("sunny_sheila_early") or is_level_completed(self, "Sheila's Alp", state):
                     level_gems += 89
             elif level == 'Cloud Spires':
                 if not can_enter_non_companion_portal(self, level, state, True):
@@ -979,33 +928,33 @@ class Spyro3World(World):
                 # All gems are available doing the level backwards.
                 level_gems = 171
                 if self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or \
-                        self.generation_options["logic_cloud_backwards"] or \
+                        self.has_trick("cloud_backwards") or \
                         state.has("Moneybags Unlock - Cloud Spires Bellows", self.player):
                     level_gems += 229
             elif level == 'Molten Crater':
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_molten_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("molten_early")):
                     return 0
                 # 109 gems in the Byrd subarea, 106 in thieves.
                 level_gems = 185
-                if self.generation_options["logic_molten_thieves_no_moneybags"] or \
+                if self.has_trick("molten_thieves_no_moneybags") or \
                         has_optional_moneybags_unlock(self, "Molten Crater Thieves Door", state):
                     level_gems += 106
-                if is_level_completed(self, "Sgt. Byrd's Base", state) or self.generation_options["logic_molten_byrd_early"]:
+                if is_level_completed(self, "Sgt. Byrd's Base", state) or self.has_trick("molten_byrd_early"):
                     level_gems += 109
             elif level == 'Seashell Shore':
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_seashell_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("seashell_early")):
                     return 0
                 # 105 gems in the Sheila sub area.
                 level_gems = 295
-                if self.generation_options["logic_seashell_sheila_early"] or is_level_completed(self, "Sheila's Alp", state):
+                if self.has_trick("seashell_sheila_early") or is_level_completed(self, "Sheila's Alp", state):
                     level_gems += 105
             elif level == 'Mushroom Speedway':
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_mushroom_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("muchroom_early")):
                     return 0
                 level_gems = 400
                 ignore_sparx_restrictions = True
             elif level == "Sheila's Alp":
-                if not self.generation_options["logic_sheila_early"] and \
+                if not self.has_trick("sheila_early") and \
                         self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and \
                         not (state.has("Moneybags Unlock - Sheila", self.player) or is_boss_defeated(self, "Sorceress", state)):
                     return 0
@@ -1049,33 +998,33 @@ class Spyro3World(World):
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 1, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 1, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_spooky_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("spooky_early")):
                     return 0
                 level_gems = 219
-                if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.generation_options["logic_spooky_no_moneybags"] or state.has("Moneybags Unlock - Spooky Swamp Door", self.player):
+                if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.has_trick("spooky_no_moneybags") or state.has("Moneybags Unlock - Spooky Swamp Door", self.player):
                     level_gems += 281
             elif level == 'Bamboo Terrace':
                 if not is_boss_defeated(self, "Buzz", state) or \
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 1, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 1, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_bamboo_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("bamboo_early")):
                     return 0
                 # Bentley's subarea has 189 gems.
                 level_gems = 311
-                if is_level_completed(self, "Bentley's Outpost", state) or self.generation_options["logic_bamboo_bentley_early"]:
+                if is_level_completed(self, "Bentley's Outpost", state) or self.has_trick("bamboo_bentley_early"):
                     level_gems += 189
             elif level == 'Country Speedway':
                 if not is_boss_defeated(self, 'Buzz', state) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 1, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_country_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("country_early")):
                     return 0
                 level_gems = 400
                 ignore_sparx_restrictions = True
             elif level == "Sgt. Byrd's Base":
                 if not is_boss_defeated(self, 'Buzz', state) or \
-                        not self.generation_options["logic_byrd_early"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not (state.has("Moneybags Unlock - Sgt. Byrd", self.player) or is_boss_defeated(self, "Sorceress", state)) or \
+                        not self.has_trick("byrd_early") and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not (state.has("Moneybags Unlock - Sgt. Byrd", self.player) or is_boss_defeated(self, "Sorceress", state)) or \
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 1, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 1, state)):
                     return 0
@@ -1125,7 +1074,7 @@ class Spyro3World(World):
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 2, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 2, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_fireworks_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("fireworks_early")):
                     return 0
                 # 175 gems in the Agent 9 subarea.
                 level_gems = 414
@@ -1133,18 +1082,18 @@ class Spyro3World(World):
                     self.generation_options["powerup_lock_settings"] == PowerupLockOptions.TYPE and state.has("Fireball Powerup", self.player) and state.has("Invincibility Powerup", self.player) or \
                     self.generation_options["powerup_lock_settings"] == PowerupLockOptions.INDIVIDUAL and state.has("Fireworks Combo Powerup", self.player):
                     level_gems += 11
-                if is_level_completed(self, "Agent 9's Lab", state) or self.generation_options["logic_fireworks_agent_9_early"]:
+                if is_level_completed(self, "Agent 9's Lab", state) or self.has_trick("fireworks_agent_9_early"):
                     level_gems += 175
             elif level == 'Charmed Ridge':
                 if not is_boss_defeated(self, "Spike", state) or \
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 2, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 2, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_charmed_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("charmed_early")):
                     return 0
                 # Moneybags blocks 472 gems.
                 level_gems = 128
-                if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.generation_options["logic_charmed_no_moneybags"] or state.has("Moneybags Unlock - Charmed Ridge Stairs", self.player):
+                if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.has_trick("charmed_no_moneybags") or state.has("Moneybags Unlock - Charmed Ridge Stairs", self.player):
                     level_gems += 470
                     if self.generation_options["powerup_lock_settings"] == PowerupLockOptions.VANILLA or \
                         self.generation_options["powerup_lock_settings"] == PowerupLockOptions.TYPE and state.has("Fireball Powerup", self.player) or \
@@ -1154,13 +1103,13 @@ class Spyro3World(World):
                 if not is_boss_defeated(self, "Spike", state) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 2, state)):
                     return 0
-                if not can_enter_non_companion_portal(self, level, state, self.generation_options["logic_honey_early"]):
+                if not can_enter_non_companion_portal(self, level, state, self.has_trick("honey_early")):
                     return 0
                 level_gems = 400
                 ignore_sparx_restrictions = True
             elif level == "Bentley's Outpost":
                 if not is_boss_defeated(self, 'Spike', state) or \
-                        not self.generation_options["logic_bentley_early"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not (state.has("Moneybags Unlock - Bentley", self.player) or is_boss_defeated(self, "Sorceress", state)) or \
+                        not self.has_trick("bentley_early") and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not (state.has("Moneybags Unlock - Bentley", self.player) or is_boss_defeated(self, "Sorceress", state)) or \
                         (self.generation_options["enable_progressive_sparx_logic"] and not (has_sparx_health(self, 1, state) or is_glitched_logic(self, state))) or \
                         (self.generation_options["enable_world_keys"] and not has_world_keys(self, 2, state)):
                     return 0
@@ -1186,7 +1135,7 @@ class Spyro3World(World):
                     return 0
                 # Moneybags locks 475 gems.
                 level_gems = 225
-                if self.generation_options["logic_crystal_no_moneybags"] or has_optional_moneybags_unlock(self, "Crystal Islands Bridge", state):
+                if self.has_trick("crystal_no_moneybags") or has_optional_moneybags_unlock(self, "Crystal Islands Bridge", state):
                     level_gems += 351
                     if self.generation_options["powerup_lock_settings"] == PowerupLockOptions.VANILLA or \
                         self.generation_options["powerup_lock_settings"] == PowerupLockOptions.TYPE and state.has("Superfly Powerup", self.player) or \
@@ -1201,7 +1150,7 @@ class Spyro3World(World):
                     return 0
                 # 252 gems are locked behind Moneybags.
                 level_gems = 448
-                if self.generation_options["logic_desert_no_moneybags"] or has_optional_moneybags_unlock(self, "Desert Ruins Door", state):
+                if self.has_trick("desert_no_moneybags") or has_optional_moneybags_unlock(self, "Desert Ruins Door", state):
                     level_gems += 252
             elif level == 'Haunted Tomb':
                 if not is_boss_defeated(self, "Scorch", state) or \
@@ -1220,7 +1169,7 @@ class Spyro3World(World):
                     return 0
                 # 108 gems in Agent 9's subarea. This can be entered from out of bounds.
                 level_gems = 592
-                if self.generation_options["logic_dino_agent_9_early"] or is_level_completed(self, "Agent 9's Lab", state):
+                if self.has_trick("dino_agent_9_early") or is_level_completed(self, "Agent 9's Lab", state):
                     level_gems += 108
             elif level == 'Harbor Speedway':
                 if not is_boss_defeated(self, "Scorch", state) or \
@@ -1368,7 +1317,7 @@ class Spyro3World(World):
             lambda state: can_enter_non_companion_portal(self, "Sunny Villa", state, True)
         )
         # Sheila's sub area may be entered early with a spin jump to the peak of the roof of the hut, or from behind.
-        if not self.generation_options["logic_sunny_sheila_early"]:
+        if not self.has_trick("sunny_sheila_early"):
             set_rule(self.multiworld.get_location("Sunny Villa: Hop to Rapunzel. (Lucy)", self.player), lambda state: is_level_completed(self,"Sheila's Alp", state))
         # Skateboarding challenges are not available while Hunter is captured.
         set_rule(self.multiworld.get_location("Sunny Villa: Lizard skating I. (Emily)", self.player), lambda state: is_boss_defeated(self, "Scorch", state) or is_glitched_logic(self, state))
@@ -1390,7 +1339,7 @@ class Spyro3World(World):
                            144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 155, 156, 157, 158, 159, 160, 161]
             empty_bits = [13, 33, 34, 58, 109, 154, 172, 173, 174, 175, 193, 194, 195, 196, 197, 203, 205, 206, 213, 214,
                           216]
-            if not self.generation_options["logic_sunny_sheila_early"]:
+            if not self.has_trick("sunny_sheila_early"):
                 for gem in sheila_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1414,7 +1363,7 @@ class Spyro3World(World):
         )
         # Cloud Spires can be completed backwards, skipping Moneybags payment.
         # This requires one of two jumps to the end of the level, plus a jump from the egg "Cloud Spires: Glide to the island. (Clare)".
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_cloud_backwards"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("cloud_backwards"):
             if not self.generation_options["open_world"]:
                 set_rule(self.multiworld.get_location("Cloud Spires: Turn on the cloud generator. (Henry)", self.player), lambda state: state.has("Moneybags Unlock - Cloud Spires Bellows", self.player))
             set_rule(self.multiworld.get_location("Cloud Spires: Plant the sun seeds. (LuLu)", self.player), lambda state: state.has("Moneybags Unlock - Cloud Spires Bellows", self.player))
@@ -1455,7 +1404,7 @@ class Spyro3World(World):
                               130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 146, 147, 148,
                               149, 150, 151, 152]
             empty_bits = [2, 81, 92, 145]
-            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_cloud_backwards"]:
+            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("cloud_backwards"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1477,17 +1426,17 @@ class Spyro3World(World):
         set_indirect_rule(
             self,
             "Molten Crater",
-            lambda state: can_enter_non_companion_portal(self, "Molten Crater", state, self.generation_options["logic_molten_early"])
+            lambda state: can_enter_non_companion_portal(self, "Molten Crater", state, self.has_trick("molten_early"))
         )
         # This is possible jumping on the posts of the nearby bridge, then onto the sub-area hut's roof.
-        if not self.generation_options["logic_molten_byrd_early"]:
+        if not self.has_trick("molten_byrd_early"):
             set_rule(self.multiworld.get_location("Molten Crater: Replace idol heads. (Ryan)", self.player), lambda state: is_level_completed(self,"Sgt. Byrd's Base", state))
             set_rule(self.multiworld.get_location("Molten Crater: Sgt. Byrd blows up a wall. (Luna)", self.player), lambda state: is_level_completed(self,"Sgt. Byrd's Base", state))
             if Spyro3LocationCategory.SKILLPOINT in self.enabled_location_categories:
                 set_rule(self.multiworld.get_location("Molten Crater: Assemble tiki heads (Skill Point)", self.player), lambda state: is_level_completed(self, "Sgt. Byrd's Base", state))
             if Spyro3LocationCategory.SKILLPOINT_GOAL in self.enabled_location_categories:
                 set_rule(self.multiworld.get_location("Molten Crater: Assemble tiki heads (Goal)", self.player), lambda state: is_level_completed(self, "Sgt. Byrd's Base", state))
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_molten_thieves_no_moneybags"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("molten_thieves_no_moneybags"):
             set_rule(self.multiworld.get_location("Molten Crater: Catch the thief. (Moira)", self.player), lambda state: state.has("Moneybags Unlock - Molten Crater Thieves Door", self.player) or (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state))
             set_rule(self.multiworld.get_location("Molten Crater: Supercharge after the thief. (Kermitt)", self.player), lambda state: state.has("Moneybags Unlock - Molten Crater Thieves Door", self.player) or (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state))
             if Spyro3LocationCategory.SKILLPOINT in self.enabled_location_categories:
@@ -1510,7 +1459,7 @@ class Spyro3World(World):
             byrd_gems = [80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101,
                          102, 103, 104, 106, 107, 108, 109, 110, 111]
             empty_bits = [5, 6, 29, 63, 64, 71, 105, 124, 131, 145]
-            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_molten_thieves_no_moneybags"]:
+            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("molten_thieves_no_moneybags"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1525,7 +1474,7 @@ class Spyro3World(World):
                             self.multiworld.get_location(f"Molten Crater: Gem {gem - skipped_bits}", self.player),
                             lambda state: state.has("Moneybags Unlock - Molten Crater Thieves Door", self.player) or (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state)
                         )
-            if not self.generation_options["logic_molten_byrd_early"]:
+            if not self.has_trick("molten_byrd_early"):
                 for gem in byrd_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1546,9 +1495,9 @@ class Spyro3World(World):
         set_indirect_rule(
             self,
             "Seashell Shore",
-            lambda state: can_enter_non_companion_portal(self, "Seashell Shore", state, self.generation_options["logic_seashell_early"])
+            lambda state: can_enter_non_companion_portal(self, "Seashell Shore", state, self.has_trick("seashell_early"))
         )
-        if not self.generation_options["logic_seashell_sheila_early"]:
+        if not self.has_trick("seashell_sheila_early"):
             set_rule(self.multiworld.get_location("Seashell Shore: Destroy the sand castle. (Mollie)", self.player), lambda state: is_level_completed(self, "Sheila's Alp", state))
             set_rule(self.multiworld.get_location("Seashell Shore: Hop to the secret cave. (Jared)", self.player), lambda state: is_level_completed(self, "Sheila's Alp", state))
         if Spyro3LocationCategory.GEMSANITY in self.enabled_location_categories:
@@ -1565,7 +1514,7 @@ class Spyro3World(World):
                           145, 146, 147, 149, 150, 151, 152, 159, 164, 165, 166, 167, 168, 170, 171, 172, 173,
                           174, 175, 178, 180, 181, 182, 183, 185, 189, 191, 192, 193, 194, 196, 198, 199, 200,
                           201, 202, 203, 204, 205, 206, 207, 209, 210, 227]
-            if not self.generation_options["logic_seashell_sheila_early"]:
+            if not self.has_trick("seashell_sheila_early"):
                 for gem in sheila_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1586,7 +1535,7 @@ class Spyro3World(World):
         set_indirect_rule(
             self,
             "Mushroom Speedway",
-            lambda state: can_enter_non_companion_portal(self, "Mushroom Speedway", state, self.generation_options["logic_mushroom_early"])
+            lambda state: can_enter_non_companion_portal(self, "Mushroom Speedway", state, self.has_trick("muchroom_early"))
         )
         # Hunter speedway challenges are not available while Hunter is captured.
         set_rule(self.multiworld.get_location("Mushroom Speedway: Hunter's dogfight. (Tater)", self.player), lambda state: is_boss_defeated(self, "Scorch", state) or is_glitched_logic(self, state))
@@ -1595,7 +1544,7 @@ class Spyro3World(World):
 
         # Sheila's Alp Rules
         # This requires a swim in air.
-        if self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_sheila_early"]:
+        if self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("sheila_early"):
             set_indirect_rule(self, "Sheila's Alp", lambda state: is_companion_unlocked(self, "Sheila", state))
         if Spyro3LocationCategory.GEMSANITY in self.enabled_location_categories:
             for i in range(117):
@@ -1750,16 +1699,16 @@ class Spyro3World(World):
             set_indirect_rule(
                 self,
                 "Spooky Swamp",
-                lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Spooky Swamp", state, self.generation_options["logic_spooky_early"])
+                lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Spooky Swamp", state, self.has_trick("spooky_early"))
             )
         else:
             set_indirect_rule(
                 self,
                 "Spooky Swamp",
-                lambda state: can_enter_non_companion_portal(self, "Spooky Swamp", state, self.generation_options["logic_spooky_early"])
+                lambda state: can_enter_non_companion_portal(self, "Spooky Swamp", state, self.has_trick("spooky_early"))
             )
         # Can skip Moneybags by damage boosting from the island egg to the end of level.
-        if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.generation_options["logic_spooky_no_moneybags"]:
+        if self.generation_options["open_world"] or self.generation_options["moneybags_settings"] != MoneybagsOptions.MONEYBAGSSANITY or self.has_trick("spooky_no_moneybags"):
             # Technically possible without Sheila completion with a glide out of bounds, but there's no reason to add an option for this at this time.
             set_rule(self.multiworld.get_location("Spooky Swamp: Escort the twins I. (Peggy)", self.player), lambda state: is_level_completed(self,"Sheila's Alp", state))
             set_rule(self.multiworld.get_location("Spooky Swamp: Escort the twins II. (Michele)", self.player), lambda state: is_level_completed(self,"Sheila's Alp", state) and state.can_reach_location("Spooky Swamp: Escort the twins I. (Peggy)", self.player))
@@ -1790,7 +1739,7 @@ class Spyro3World(World):
                               140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157,
                               158, 159, 160]
             empty_bits = [5, 18, 54, 59, 76, 80, 104, 110, 122]
-            if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_spooky_no_moneybags"]:
+            if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("spooky_no_moneybags"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1812,16 +1761,16 @@ class Spyro3World(World):
             set_indirect_rule(
                 self,
                 "Bamboo Terrace",
-                lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Bamboo Terrace", state, self.generation_options["logic_bamboo_early"])
+                lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Bamboo Terrace", state, self.has_trick("bamboo_early"))
             )
         else:
             set_indirect_rule(
                 self,
                 "Bamboo Terrace",
-                lambda state: can_enter_non_companion_portal(self, "Bamboo Terrace", state, self.generation_options["logic_bamboo_early"])
+                lambda state: can_enter_non_companion_portal(self, "Bamboo Terrace", state, self.has_trick("bamboo_early"))
             )
         # This requires a swim in air.
-        if not self.generation_options["logic_bamboo_bentley_early"]:
+        if not self.has_trick("bamboo_bentley_early"):
             set_rule(self.multiworld.get_location("Bamboo Terrace: Smash to the mountain top. (Brubeck)", self.player), lambda state: is_level_completed(self,"Bentley's Outpost", state))
             if Spyro3LocationCategory.LIFE_BOTTLE in self.enabled_location_categories:
                 set_rule(self.multiworld.get_location("Bamboo Terrace: Life Bottle in Bentley Sub-Area", self.player), lambda state: is_level_completed(self, "Bentley's Outpost", state))
@@ -1844,7 +1793,7 @@ class Spyro3World(World):
                             155, 156, 157, 158, 162, 164, 165, 166, 169, 170, 173, 174, 177, 184, 189, 191]
             empty_bits = [53, 54, 55, 56, 77, 95, 96, 115, 125, 126, 142, 159, 160, 161, 163, 167, 168, 171, 172, 175,
                           176, 178, 179, 180, 181, 182, 183, 185, 186, 187, 188, 190]
-            if not self.generation_options["logic_bamboo_bentley_early"]:
+            if not self.has_trick("bamboo_bentley_early"):
                 for gem in bentley_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -1865,7 +1814,7 @@ class Spyro3World(World):
         set_indirect_rule(
             self,
             "Country Speedway",
-            lambda state: can_enter_non_companion_portal(self, "Country Speedway", state, self.generation_options["logic_country_early"])
+            lambda state: can_enter_non_companion_portal(self, "Country Speedway", state, self.has_trick("country_early"))
         )
         # Hunter speedway challenges are not available while Hunter is captured.
         set_rule(self.multiworld.get_location("Country Speedway: Hunter's rescue mission. (Roberto)", self.player), lambda state: is_boss_defeated(self, "Scorch", state) or is_glitched_logic(self, state))
@@ -1874,9 +1823,9 @@ class Spyro3World(World):
 
         # Sgt. Byrd's Base Rules
         # This requires a swim in air or a glide out of bounds.
-        if self.generation_options["enable_progressive_sparx_logic"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_byrd_early"]:
+        if self.generation_options["enable_progressive_sparx_logic"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("byrd_early"):
             set_indirect_rule(self, "Sgt. Byrd's Base", lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and is_companion_unlocked(self, "Sgt. Byrd", state))
-        elif self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_byrd_early"]:
+        elif self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("byrd_early"):
             set_indirect_rule(self, "Sgt. Byrd's Base", lambda state: is_companion_unlocked(self, "Sgt. Byrd", state))
         elif self.generation_options["enable_progressive_sparx_logic"]:
             set_indirect_rule(self, "Sgt. Byrd's Base", lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)))
@@ -1987,7 +1936,7 @@ class Spyro3World(World):
                 lambda state: can_enter_non_companion_portal(self, "Frozen Altars", state, True)
             )
         # Requires a proxy or getting onto the nearby wall and gliding out of bounds
-        if not self.generation_options["logic_frozen_bentley_early"]:
+        if not self.has_trick("frozen_bentley_early"):
             # 0 gems in Bentley subarea.
             set_rule(self.multiworld.get_location("Frozen Altars: Box the yeti. (Aly)", self.player), lambda state: is_level_completed(self,"Bentley's Outpost", state))
             set_rule(self.multiworld.get_location("Frozen Altars: Box the yeti again! (Ricco)", self.player), lambda state: is_level_completed(self,"Bentley's Outpost", state) and state.can_reach_location("Frozen Altars: Box the yeti. (Aly)", self.player))
@@ -1996,7 +1945,7 @@ class Spyro3World(World):
             if Spyro3LocationCategory.SKILLPOINT_GOAL in self.enabled_location_categories:
                 set_rule(self.multiworld.get_location("Frozen Altars: Beat yeti in two rounds (Goal)", self.player), lambda state: is_level_completed(self, "Bentley's Outpost", state) and state.can_reach_location("Frozen Altars: Box the yeti. (Aly)", self.player))
         # Requires a proxy.
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_frozen_cat_hockey_no_moneybags"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("frozen_cat_hockey_no_moneybags"):
             # 0 gems in cat hockey subarea.
             set_rule(self.multiworld.get_location("Frozen Altars: Catch the ice cats. (Ba'ah)", self.player), lambda state: state.has("Moneybags Unlock - Frozen Altars Cat Hockey Door", self.player) or (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state))
         if Spyro3LocationCategory.GEMSANITY in self.enabled_location_categories:
@@ -2099,16 +2048,16 @@ class Spyro3World(World):
             set_indirect_rule(
                 self,
                 "Fireworks Factory",
-                lambda state: (has_sparx_health(self, 2, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Fireworks Factory", state, self.generation_options["logic_fireworks_early"])
+                lambda state: (has_sparx_health(self, 2, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Fireworks Factory", state, self.has_trick("fireworks_early"))
             )
         else:
             set_indirect_rule(
                 self,
                 "Fireworks Factory",
-                lambda state: can_enter_non_companion_portal(self, "Fireworks Factory", state, self.generation_options["logic_fireworks_early"])
+                lambda state: can_enter_non_companion_portal(self, "Fireworks Factory", state, self.has_trick("fireworks_early"))
             )
         # This requires a careful glide to the right "antenna" of the subarea hut.
-        if not self.generation_options["logic_fireworks_agent_9_early"]:
+        if not self.has_trick("fireworks_agent_9_early"):
             set_rule(self.multiworld.get_location("Fireworks Factory: You're doomed! (Patty)", self.player), lambda state: is_level_completed(self,"Agent 9's Lab", state))
             set_rule(self.multiworld.get_location("Fireworks Factory: You're still doomed! (Donovan)", self.player), lambda state: is_level_completed(self,"Agent 9's Lab", state) and state.can_reach_location("Fireworks Factory: You're doomed! (Patty)", self.player))
             if Spyro3LocationCategory.SKILLPOINT in self.enabled_location_categories:
@@ -2136,7 +2085,7 @@ class Spyro3World(World):
                           199, 200, 201]
             combo_powerup_gems = [111, 112, 114, 115, 116]
             empty_bits = [14, 20, 46, 51, 77, 82, 97, 98, 104, 105, 106, 108, 141, 153, 155, 177]
-            if not self.generation_options["logic_fireworks_agent_9_early"]:
+            if not self.has_trick("fireworks_agent_9_early"):
                 for gem in agent_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -2178,16 +2127,16 @@ class Spyro3World(World):
             set_indirect_rule(
                 self,
                 "Charmed Ridge",
-                lambda state: (has_sparx_health(self, 2, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Charmed Ridge", state, self.generation_options["logic_charmed_early"])
+                lambda state: (has_sparx_health(self, 2, state) or is_glitched_logic(self, state)) and can_enter_non_companion_portal(self, "Charmed Ridge", state, self.has_trick("charmed_early"))
             )
         else:
             set_indirect_rule(
                 self,
                 "Charmed Ridge",
-                lambda state: can_enter_non_companion_portal(self, "Charmed Ridge", state, self.generation_options["logic_charmed_early"])
+                lambda state: can_enter_non_companion_portal(self, "Charmed Ridge", state, self.has_trick("charmed_early"))
             )
         # Can glide through a part of the wall with no collision.  A proxy to end of level is possible, but this is harder and grants less access.
-        if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_charmed_no_moneybags"]:
+        if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("charmed_no_moneybags"):
             if not self.generation_options["open_world"]:
                 set_rule(self.multiworld.get_location("Charmed Ridge: Rescue the Fairy Princess. (Sakura)", self.player), lambda state: state.has("Moneybags Unlock - Charmed Ridge Stairs", self.player))
             set_rule(self.multiworld.get_location("Charmed Ridge: Glide to the tower. (Moe)", self.player), lambda state: state.has("Moneybags Unlock - Charmed Ridge Stairs", self.player))
@@ -2227,7 +2176,7 @@ class Spyro3World(World):
             fireball_gems = [120, 121]
             empty_bits = [20, 21, 53, 58, 59, 60, 61, 66, 100, 101, 102, 129, 130, 136, 137, 144, 145, 146, 147, 150,
                           152, 162]
-            if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_charmed_no_moneybags"]:
+            if not self.generation_options["open_world"] and self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("charmed_no_moneybags"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -2284,7 +2233,7 @@ class Spyro3World(World):
         set_indirect_rule(
             self,
             "Honey Speedway",
-            lambda state: can_enter_non_companion_portal(self, "Honey Speedway", state, self.generation_options["logic_honey_early"])
+            lambda state: can_enter_non_companion_portal(self, "Honey Speedway", state, self.has_trick("honey_early"))
         )
         # Hunter speedway challenges are not available while Hunter is captured.
         set_rule(self.multiworld.get_location("Honey Speedway: Hunter's narrow escape. (Nori)", self.player), lambda state: is_boss_defeated(self, "Scorch", state) or is_glitched_logic(self, state))
@@ -2292,13 +2241,13 @@ class Spyro3World(World):
 
 
         # Bentley's Outpost Rules
-        if self.generation_options["enable_progressive_sparx_logic"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_bentley_early"]:
+        if self.generation_options["enable_progressive_sparx_logic"] and self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("bentley_early"):
             set_indirect_rule(
                 self,
                 "Bentley's Outpost",
                 lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)) and is_companion_unlocked(self, "Bentley", state)
             )
-        elif self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.generation_options["logic_bentley_early"]:
+        elif self.generation_options["moneybags_settings"] != MoneybagsOptions.VANILLA and not self.has_trick("bentley_early"):
             set_indirect_rule(self, "Bentley's Outpost", lambda state: is_companion_unlocked(self, "Bentley", state))
         elif self.generation_options["enable_progressive_sparx_logic"]:
             set_indirect_rule(self, "Bentley's Outpost", lambda state: (has_sparx_health(self, 1, state) or is_glitched_logic(self, state)))
@@ -2373,7 +2322,7 @@ class Spyro3World(World):
                 lambda state: can_enter_non_companion_portal(self, "Crystal Islands", state, True)
             )
         # Can defeat the Sorceress or perform a swim in air.
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_crystal_no_moneybags"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("crystal_no_moneybags"):
             # Moneybags locks 475 gems.
             set_rule(self.multiworld.get_location("Crystal Islands: Reach the crystal tower. (Lloyd)", self.player), lambda state: (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state) or state.has("Moneybags Unlock - Crystal Islands Bridge", self.player))
             set_rule(self.multiworld.get_location("Crystal Islands: Ride the slide. (Elloise)", self.player), lambda state: (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state) or state.has("Moneybags Unlock - Crystal Islands Bridge", self.player))
@@ -2453,7 +2402,7 @@ class Spyro3World(World):
                              78]
             empty_bits = [26, 41, 50, 51, 60, 61, 62, 63, 69, 102, 201, 202, 203, 204, 212, 216, 217, 218, 219, 220,
                           221, 222, 223, 224, 225]
-            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_crystal_no_moneybags"]:
+            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("crystal_no_moneybags"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -2530,7 +2479,7 @@ class Spyro3World(World):
         set_rule(self.multiworld.get_location("Desert Ruins: Krash Kangaroo I. (Lester)", self.player), lambda state: is_level_completed(self,"Sheila's Alp", state))
         set_rule(self.multiworld.get_location("Desert Ruins: Krash Kangaroo II. (Pete)", self.player), lambda state: is_level_completed(self,"Sheila's Alp", state))
         # Can defeat the Sorceress, proxy off a scorpion, or do a terrain jump to end of level.
-        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_desert_no_moneybags"]:
+        if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("desert_no_moneybags"):
             # 79 gems in Sheila subarea. 252 are locked behind Moneybags.
             set_rule(self.multiworld.get_location("Desert Ruins: Raid the tomb. (Marty)", self.player), lambda state: (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state) or state.has("Moneybags Unlock - Desert Ruins Door", self.player))
             set_rule(self.multiworld.get_location("Desert Ruins: Shark shootin'. (Sadie)", self.player), lambda state: (self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]) and is_boss_defeated(self, "Sorceress", state) or state.has("Moneybags Unlock - Desert Ruins Door", self.player))
@@ -2555,7 +2504,7 @@ class Spyro3World(World):
             empty_bits = [15, 20, 21, 50, 56, 63, 83, 89, 90, 91, 92, 93, 103, 104, 106, 107, 108, 109, 123, 124, 125,
                           126, 150, 151, 152, 153, 154, 155, 156, 157, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176,
                           177, 178, 179, 180, 181]
-            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.generation_options["logic_desert_no_moneybags"]:
+            if self.generation_options["moneybags_settings"] == MoneybagsOptions.MONEYBAGSSANITY and not self.has_trick("desert_no_moneybags"):
                 for gem in moneybags_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -2608,7 +2557,7 @@ class Spyro3World(World):
                 "Dino Mines",
                 lambda state: can_enter_non_companion_portal(self, "Dino Mines", state, False)
             )
-        if not self.generation_options["logic_dino_agent_9_early"]:
+        if not self.has_trick("dino_agent_9_early"):
             set_rule(self.multiworld.get_location("Dino Mines: Gunfight at the Jurassic Corral. (Sharon)", self.player), lambda state: is_level_completed(self, "Agent 9's Lab", state))
             set_rule(self.multiworld.get_location("Dino Mines: Take it to the bank. (Sergio)", self.player), lambda state: is_level_completed(self, "Agent 9's Lab", state) and state.can_reach_location("Dino Mines: Gunfight at the Jurassic Corral. (Sharon)", self.player))
             if Spyro3LocationCategory.SKILLPOINT in self.enabled_location_categories:
@@ -2630,7 +2579,7 @@ class Spyro3World(World):
                           152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 171,
                           172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 186, 192, 196, 197, 202,
                           206, 207, 208, 212, 213, 214, 215, 216, 217, 218, 219, 225]
-            if not self.generation_options["logic_dino_agent_9_early"]:
+            if not self.has_trick("dino_agent_9_early"):
                 for gem in agent_gems:
                     skipped_bits = 0
                     for bit in empty_bits:
@@ -2678,9 +2627,9 @@ class Spyro3World(World):
 
         # Sorceress' Lair Rules
         if self.generation_options["goal"] != GoalOptions.EGG_HUNT or self.generation_options["egg_count"] > self.generation_options["sorceress_door_requirement"]:
-            if not self.generation_options["logic_sorceress_early"] and self.generation_options["enable_progressive_sparx_logic"]:
+            if not self.has_trick("sorceress_early") and self.generation_options["enable_progressive_sparx_logic"]:
                 set_indirect_rule(self, "Sorceress", lambda state: (has_sparx_health(self, 3, state) or is_glitched_logic(self, state)) and state.has("Egg", self.player, self.generation_options["sorceress_door_requirement"]))
-            elif not self.generation_options["logic_sorceress_early"]:
+            elif not self.has_trick("sorceress_early"):
                 set_indirect_rule(self, "Sorceress", lambda state: state.has("Egg", self.player, self.generation_options["sorceress_door_requirement"]))
             elif self.generation_options["enable_progressive_sparx_logic"]:
                 set_indirect_rule(self, "Sorceress", lambda state: (has_sparx_health(self, 3, state) or is_glitched_logic(self, state)))
@@ -2859,33 +2808,7 @@ class Spyro3World(World):
                 "easy_whackamole": self.options.easy_whackamole.value,
                 "easy_tunnels": self.options.easy_tunnels.value,
                 "no_green_rockets": self.options.no_green_rockets.value,
-                "logic_sunny_sheila_early": self.options.logic_sunny_sheila_early.value,
-                "logic_cloud_backwards": self.options.logic_cloud_backwards.value,
-                "logic_molten_early": self.options.logic_molten_early.value,
-                "logic_molten_byrd_early": self.options.logic_molten_byrd_early.value,
-                "logic_molten_thieves_no_moneybags": self.options.logic_molten_thieves_no_moneybags.value,
-                "logic_seashell_early": self.options.logic_seashell_early.value,
-                "logic_seashell_sheila_early": self.options.logic_seashell_sheila_early.value,
-                "logic_mushroom_early": self.options.logic_mushroom_early.value,
-                "logic_sheila_early": self.options.logic_sheila_early.value,
-                "logic_spooky_early": self.options.logic_spooky_early.value,
-                "logic_spooky_no_moneybags": self.options.logic_spooky_no_moneybags.value,
-                "logic_bamboo_early": self.options.logic_bamboo_early.value,
-                "logic_bamboo_bentley_early": self.options.logic_bamboo_bentley_early.value,
-                "logic_country_early": self.options.logic_country_early.value,
-                "logic_byrd_early": self.options.logic_byrd_early.value,
-                "logic_frozen_bentley_early": self.options.logic_frozen_bentley_early.value,
-                "logic_frozen_cat_hockey_no_moneybags": self.options.logic_frozen_cat_hockey_no_moneybags.value,
-                "logic_fireworks_early": self.options.logic_fireworks_early.value,
-                "logic_fireworks_agent_9_early": self.options.logic_fireworks_agent_9_early.value,
-                "logic_charmed_early": self.options.logic_charmed_early.value,
-                "logic_charmed_no_moneybags": self.options.logic_charmed_no_moneybags.value,
-                "logic_honey_early": self.options.logic_honey_early.value,
-                "logic_bentley_early": self.options.logic_bentley_early.value,
-                "logic_crystal_no_moneybags": self.options.logic_crystal_no_moneybags.value,
-                "logic_desert_no_moneybags": self.options.logic_desert_no_moneybags.value,
-                "logic_dino_agent_9_early": self.options.logic_dino_agent_9_early.value,
-                "logic_sorceress_early": self.options.logic_sorceress_early.value,
+                "enable_tricks": self.options.enable_tricks.value
             },
             "gemsanity_ids": gemsanity_locations,
             "hints": hints,

@@ -1,6 +1,8 @@
 import typing
 from dataclasses import dataclass
-from Options import Toggle, DefaultOnToggle, Option, Range, Choice, ItemDict, DeathLink, PerGameCommonOptions, OptionGroup
+from Options import Toggle, DefaultOnToggle, Option, Range, Choice, ItemDict, DeathLink, PerGameCommonOptions, OptionGroup, OptionSet
+
+trick_options = ["sunny_sheila_early", "cloud_backwards", "molten_early", "molten_byrd_early", "molten_thieves_no_moneybags", "seashell_early", "seashell_sheila_early", "mushroom_early", "sheila_early", "spooky_early", "spooky_no_moneybags", "bamboo_early", "bamboo_bentley_early", "country_early", "byrd_early", "frozen_bentley_early", "frozen_cat_hockey_no_moneybags", "fireworks_early", "fireworks_agent_9_early", "charmed_early", "charmed_no_moneybags", "honey_early", "bentley_early", "crystal_no_moneybags", "desert_no_moneybags", "dino_agent_9_early", "sorceress_early"]
 
 class GoalOptions():
     SORCERESS_ONE = 0
@@ -476,140 +478,14 @@ class NoGreenRockets(Toggle):
     """Collecting a green rocket in Scorch will automatically convert to 50 red rockets instead."""
     display_name = "Convert Scorch Green Rockets to Red"
 
-class LogicSunnySheilaEarly(Toggle):
-    """Potentially require entering Sunny Villa's Sheila sub-area from out of bounds.
-    NOTE: Entering this area from behind may crash the game if done incorrectly.
-    This option only matters is Companionsanity or Moneybagssanity is turned on."""
-    display_name = "Enter Sunny Villa Sheila Area Early"
-
-class LogicCloudBackwards(Toggle):
-    """Potentially require completing Cloud Spires backwards
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Cloud Spires Backwards"
-
-class LogicMoltenEarly(Toggle):
-    """Potentially require entering Molten Crater from out of bounds."""
-    display_name = "Enter Molten Crater Early"
-
-class LogicMoltenByrdEarly(Toggle):
-    """Potentially require entering Molten Crater's Sgt. Byrd sub-area from out of bounds"""
-    display_name = "Enter Molten Crater Sgt. Byrd Area Early"
-
-class LogicMoltenThievesNoMoneybags(Toggle):
-    """Potentially require entering Molten Crater's Thieves sub-area from out of bounds
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Enter Molten Crater Thieves without Moneybags"
-
-class LogicSeashellEarly(Toggle):
-    """Potentially require entering Seashell Shores from out of bounds."""
-    display_name = "Enter Seashell Shores Early"
-
-class LogicSeashellSheilaEarly(Toggle):
-    """Potentially require entering Seashell Shores' Sheila sub-area from out of bounds."""
-    display_name = "Enter Seashell Shores Sheila Area Early"
-
-class LogicMushroomEarly(Toggle):
-    """Potentially require entering Mushroom Speedway from out of bounds."""
-    display_name = "Enter Mushroom Speedway Early"
-
-class LogicSheilaEarly(Toggle):
-    """Potentially require entering Sheila's Alp from out of bounds
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Companionsanity or Moneybagssanity is turned on."""
-    display_name = "Enter Sheila's Alp Early"
-
-class LogicSpookyEarly(Toggle):
-    """Potentially require entering Spooky Swamp from out of bounds."""
-    display_name = "Enter Spooky Swamp Early"
-
-class LogicSpookyNoMoneybags(Toggle):
-    """Potentially require getting to the end of Spooky Swamp
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Skip Moneybags in Spooky Swamp"
-
-class LogicBambooEarly(Toggle):
-    """Potentially require entering Bamboo Terrace from out of bounds."""
-    display_name = "Enter Bamboo Terrace Early"
-
-class LogicBambooBentleyEarly(Toggle):
-    """Potentially require entering the Bamboo Terrace Bentley sub-area from out of bounds."""
-    display_name = "Enter Bamboo Terrace Bentley Area Early"
-
-class LogicCountryEarly(Toggle):
-    """Potentially require entering Country Speedway from out of bounds."""
-    display_name = "Enter Country Speedway Early"
-
-class LogicByrdEarly(Toggle):
-    """Potentially require entering Sgt. Byrd's Base from out of bounds
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Companionsanity or Moneybagssanity is turned on."""
-    display_name = "Enter Sgt. Byrd's Base Early"
-
-class LogicFrozenBentleyEarly(Toggle):
-    """Potentially require entering the Frozen Altars Bentley sub-area from out of bounds.
-    This option only matters if Companionsanity or Moneybagssaniity is turned on."""
-    display_name = "Enter Frozen Altars Bentley Area Early"
-
-class LogicFrozenCatHockeyNoMoneybags(Toggle):
-    """Potentially require entering the Frozen Altars cat hockey minigame
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Enter Frozen Altars Cat Hockey Area without Moneybags"
-
-class LogicFireworksEarly(Toggle):
-    """Potentially require entering Fireworks Factory from out of bounds."""
-    display_name = "Enter Fireworks Factory Early"
-
-class LogicFireworksAgent9Early(Toggle):
-    """Potentially require entering Fireworks Factory's Agent 9 sub-area
-    out of bounds."""
-    display_name = "Enter Fireworks Factory Agent 9 Area Early"
-
-class LogicCharmedEarly(Toggle):
-    """Potentially require entering Charmed Ridge from out of bounds."""
-    display_name = "Enter Charmed Ridge Early"
-
-class LogicCharmedNoMoneybags(Toggle):
-    """Potentially require getting past the stairs in Charmed Ridge
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Pass Charmed Ridge Stairs without Moneybags"
-
-class LogicHoneyEarly(Toggle):
-    """Potentially require entering Honey Speedway from out of bounds."""
-    display_name = "Enter Honey Speedway Early"
-
-class LogicBentleyEarly(Toggle):
-    """Potentially require entering Bentley's Outpost
-    from out of bounds.
-    This option only matters if Companionsanity or Moneybagssanity is turned on."""
-    display_name = "Enter Bentley's Outpost Early"
-
-class LogicCrystalNoMoneybags(Toggle):
-    """Potentially require fully completing Crystal Islands
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Complete Crystal Islands without Moneybags"
-
-class LogicDesertNoMoneybags(Toggle):
-    """Potentially require fully completing Desert Ruins
-    without paying Moneybags or beating the Sorceress.
-    This option only matters if Moneybagssanity is turned on."""
-    display_name = "Complete Desert Ruins without Moneybags"
-
-class LogicDinoAgent9Early(Toggle):
-    """Potentially require entering the Agent 9 sub-area
-    of Dino Mines out of bounds."""
-    display_name = "Enter Dino Mines Agent 9 Area Early"
-
-class LogicSorceressEarly(Toggle):
-    """Potentially require entering Sorceress' Lair out of bounds.
-    Does not change the door or goal requirements."""
-    display_name = "Enter Sorceress' Lair Early"
-
+class EnableTricks(OptionSet):
+    """This option allows you to select from a set of supported tricks. For example, you can
+    choose to have the logic potentially require you to enter Sunny Villa's Sheila sub-area from
+    out of bounds. A full list of supported tricks can be found at
+    https://github.com/seanstan95/S3AP/wiki/Tricks. Your selections should be entered in a comma
+    separated list format. For example: ["sunny_sheila_early", "seashell_early"] would be a valid entry."""
+    valid_keys = trick_options
+    display_name = "Enable Tricks"
 
 @dataclass
 class Spyro3Option(PerGameCommonOptions):
@@ -639,6 +515,7 @@ class Spyro3Option(PerGameCommonOptions):
     moneybags_settings: MoneybagsSettings
     powerup_lock_settings: PowerupLockSettings
     enable_world_keys: EnableWorldKeys
+    enable_tricks: EnableTricks
     enable_filler_extra_lives: EnableFillerExtraLives
     enable_filler_invincibility: EnableFillerInvincibility
     enable_filler_color_change: EnableFillerColorChange
@@ -665,33 +542,6 @@ class Spyro3Option(PerGameCommonOptions):
     easy_whackamole: EasyWhackAMole
     easy_tunnels: EasyTunnels
     no_green_rockets: NoGreenRockets
-    logic_sunny_sheila_early: LogicSunnySheilaEarly
-    logic_cloud_backwards: LogicCloudBackwards
-    logic_molten_early: LogicMoltenEarly
-    logic_molten_byrd_early: LogicMoltenByrdEarly
-    logic_molten_thieves_no_moneybags: LogicMoltenThievesNoMoneybags
-    logic_seashell_early: LogicSeashellEarly
-    logic_seashell_sheila_early: LogicSeashellSheilaEarly
-    logic_mushroom_early: LogicMushroomEarly
-    logic_sheila_early: LogicSheilaEarly
-    logic_spooky_early: LogicSpookyEarly
-    logic_spooky_no_moneybags: LogicSpookyNoMoneybags
-    logic_bamboo_early: LogicBambooEarly
-    logic_bamboo_bentley_early: LogicBambooBentleyEarly
-    logic_country_early: LogicCountryEarly
-    logic_byrd_early: LogicByrdEarly
-    logic_frozen_bentley_early: LogicFrozenBentleyEarly
-    logic_frozen_cat_hockey_no_moneybags: LogicFrozenCatHockeyNoMoneybags
-    logic_fireworks_early: LogicFireworksEarly
-    logic_fireworks_agent_9_early: LogicFireworksAgent9Early
-    logic_charmed_early: LogicCharmedEarly
-    logic_charmed_no_moneybags: LogicCharmedNoMoneybags
-    logic_honey_early: LogicHoneyEarly
-    logic_bentley_early: LogicBentleyEarly
-    logic_crystal_no_moneybags: LogicCrystalNoMoneybags
-    logic_desert_no_moneybags: LogicDesertNoMoneybags
-    logic_dino_agent_9_early: LogicDinoAgent9Early
-    logic_sorceress_early: LogicSorceressEarly
 
 
 # Group logic/trick options together, especially for the local WebHost.
@@ -724,7 +574,8 @@ spyro_options_groups = [
             SBRDoorGemRequirement,
             MoneybagsSettings,
             PowerupLockSettings,
-            EnableWorldKeys
+            EnableWorldKeys,
+            EnableTricks
         ],
         False
     ),
@@ -770,39 +621,6 @@ spyro_options_groups = [
             EasyWhackAMole,
             EasyTunnels,
             NoGreenRockets
-        ],
-        True
-    ),
-    OptionGroup(
-        "Tricks",
-        [
-            LogicSunnySheilaEarly,
-            LogicCloudBackwards,
-            LogicMoltenEarly,
-            LogicMoltenByrdEarly,
-            LogicMoltenThievesNoMoneybags,
-            LogicSeashellEarly,
-            LogicSeashellSheilaEarly,
-            LogicMushroomEarly,
-            LogicSheilaEarly,
-            LogicSpookyEarly,
-            LogicSpookyNoMoneybags,
-            LogicBambooEarly,
-            LogicBambooBentleyEarly,
-            LogicCountryEarly,
-            LogicByrdEarly,
-            LogicFrozenBentleyEarly,
-            LogicFrozenCatHockeyNoMoneybags,
-            LogicFireworksEarly,
-            LogicFireworksAgent9Early,
-            LogicCharmedEarly,
-            LogicCharmedNoMoneybags,
-            LogicHoneyEarly,
-            LogicBentleyEarly,
-            LogicCrystalNoMoneybags,
-            LogicDesertNoMoneybags,
-            LogicDinoAgent9Early,
-            LogicSorceressEarly
         ],
         True
     ),
