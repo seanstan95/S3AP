@@ -789,7 +789,7 @@ class Spyro3World(World):
             item_classification = ItemClassification.progression
             # Moneybags unlocks the player says they don't need are useful, not progression.
             # No way to skip into Agent 9 early, and skipping into Nancy is missable.
-            # todo: this had *if "logic_sheila_early" in self.generation_options at the start. Redundant since always there? I removed it to see what happens
+            # Phoenix todo: this had "if logic_sheila_early in self.generation_options" at the start. Redundant since always there? I removed it to see what happens
             if (name == "Moneybags Unlock - Sheila" and self.has_trick("sheila_early") or
                     name == "Moneybags Unlock - Sgt. Byrd" and self.has_trick("byrd_early") or
                     name == "Moneybags Unlock - Bentley" and self.has_trick("bentley_early") or
@@ -2749,6 +2749,7 @@ class Spyro3World(World):
         if self.generation_options["zoe_gives_hints"] > 0:
             hints = generateHints(self.player, self.generation_options["zoe_gives_hints"], self)
 
+        easy_options = self.options.enable_easy_options.value  # for easier + more readable referencing below
         gemsanity_locations = []
         for loc in self.chosen_gem_locations:
             loc_id = self.location_name_to_id[loc]
@@ -2794,20 +2795,20 @@ class Spyro3World(World):
                 "enable_progressive_sparx_logic": self.options.enable_progressive_sparx_logic.value,
                 "require_sparx_for_max_gems": self.options.require_sparx_for_max_gems.value,
                 "zoe_gives_hints": self.options.zoe_gives_hints.value,
-                "easy_skateboarding_lizards": self.options.easy_skateboarding_lizards.value,
-                "easy_skateboarding_points": self.options.easy_skateboarding_points.value,
-                "easy_skateboarding_lost_fleet": self.options.easy_skateboarding_lost_fleet.value,
-                "easy_skateboarding_super_bonus_round": self.options.easy_skateboarding_super_bonus_round.value,
-                "easy_boxing": self.options.easy_boxing.value,
-                "easy_sheila_bombing": self.options.easy_sheila_bombing.value,
-                "easy_tanks": self.options.easy_tanks.value,
-                "easy_subs": self.options.easy_subs.value,
-                "easy_bluto": self.options.easy_bluto.value,
-                "easy_sleepyhead": self.options.easy_sleepyhead.value,
-                "easy_shark_riders": self.options.easy_shark_riders.value,
-                "easy_whackamole": self.options.easy_whackamole.value,
-                "easy_tunnels": self.options.easy_tunnels.value,
-                "no_green_rockets": self.options.no_green_rockets.value,
+                "easy_skateboarding_lizards": 1 if "easy_skateboarding_lizards" in easy_options else 0,
+                "easy_skateboarding_points": 1 if "easy_skateboarding_points" in easy_options else 0,
+                "easy_skateboarding_lost_fleet": 1 if "easy_skateboarding_lost_fleet" in easy_options else 0,
+                "easy_skateboarding_super_bonus_round": 1 if "easy_skateboarding_super_bonus_round" in easy_options else 0,
+                "easy_boxing": 1 if "easy_boxing" in easy_options else 0,
+                "easy_sheila_bombing": 1 if "easy_sheila_bombing" in easy_options else 0,
+                "easy_tanks": 1 if "easy_tanks" in easy_options else 0,
+                "easy_subs": 1 if "easy_subs" in easy_options else 0,
+                "easy_bluto": 1 if "easy_bluto" in easy_options else 0,
+                "easy_sleepyhead": 1 if "easy_sleepyhead" in easy_options else 0,
+                "easy_shark_riders": 1 if "easy_shark_riders" in easy_options else 0,
+                "easy_whack_a_mole": 1 if "easy_whack_a_mole" in easy_options else 0,
+                "easy_tunnels": 1 if "easy_tunnels" in easy_options else 0,
+                "no_green_rockets": 1 if "no_green_rockets" in easy_options else 0,
                 "enable_tricks": self.options.enable_tricks.value
             },
             "gemsanity_ids": gemsanity_locations,

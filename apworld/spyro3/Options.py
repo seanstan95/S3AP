@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from Options import Toggle, DefaultOnToggle, Option, Range, Choice, ItemDict, DeathLink, PerGameCommonOptions, OptionGroup, OptionSet
 
 trick_options = ["sunny_sheila_early", "cloud_backwards", "molten_early", "molten_byrd_early", "molten_thieves_no_moneybags", "seashell_early", "seashell_sheila_early", "mushroom_early", "sheila_early", "spooky_early", "spooky_no_moneybags", "bamboo_early", "bamboo_bentley_early", "country_early", "byrd_early", "frozen_bentley_early", "frozen_cat_hockey_no_moneybags", "fireworks_early", "fireworks_agent_9_early", "charmed_early", "charmed_no_moneybags", "honey_early", "bentley_early", "crystal_no_moneybags", "desert_no_moneybags", "dino_agent_9_early", "sorceress_early"]
+difficulty_options = ["easy_skateboarding_lizards", "easy_skateboarding_points", "easy_skateboarding_lost_fleet", "easy_skateboarding_super_bonus_round", "easy_boxing", "easy_sheila_bombing", "easy_tanks", "easy_subs", "easy_bluto", "easy_sleepyhead", "easy_shark_riders", "easy_whack_a_mole", "easy_tunnels", "no_green_rockets"]
 
 class GoalOptions():
     SORCERESS_ONE = 0
@@ -416,68 +417,6 @@ class ZoeGivesHints(Range):
     range_end = 13
     default = 0
 
-class EasySkateboardingLizards(Toggle):
-    """The Sunny Villa lizard skateboarding challenges require only 1 lizard.
-    Results in minor graphical glitches."""
-    display_name = "Easy Skateboarding Lizards"
-
-class EasySkateboardingPoints(Toggle):
-    """Point-based skateboarding challenges in Sunny Villa
-    and Enchanted Towers become much easier.
-    Includes skill points."""
-    display_name = "Easy Skateboarding Points"
-
-class EasySkateboardingLostFleet(Toggle):
-    """Your turbo cannot run out in the Lost Fleet skateboarding challenges."""
-    display_name = "Easy Skateboarding Lost Fleet"
-
-class EasySkateboardingSuperBonusRound(Toggle):
-    """Your turbo cannot run out in the Super Bonus Round skateboarding challenge."""
-    display_name = "Easy Skateboarding Super Bonus Round"
-
-class EasySubs(Toggle):
-    """The Lost Fleet submarine challenges require ony 1 sub.
-    The HUD will incorrectly display 1/1."""
-    display_name = "Easy Subs"
-
-class EasyBoxing(Toggle):
-    """The enemy yeti in Frozen Altars boxing has only 1 health."""
-    display_name = "Easy Boxing"
-
-class EasySheilaBombing(Toggle):
-    """Rocks and mushrooms never respawn in Spooky Swamp's Sheila sub-area."""
-    display_name = "Easy Spooky Sheila Missions"
-
-class EasyBluto(Toggle):
-    """Bluto in Seashell Shores has only 1 health."""
-    display_name = "Easy Bluto"
-
-class EasySleepyhead(Toggle):
-    """Sleepyhead in Spooky Swamp has only 1 health."""
-    display_name = "Easy Sleepyhead"
-
-class EasyWhackAMole(Toggle):
-    """The Bentley Whack-A-Mole challenge in Crystal Islands require only 1 mole."""
-    display_name = "Easy Whack-a-Mole"
-
-class EasySharkRiders(Toggle):
-    """The Shark Riders challenge in Desert Ruins requires only 1 shark,
-    which starts to the left of the building."""
-    display_name = "Easy Shark Riders"
-
-class EasyTanks(Toggle):
-    """The Tanks challenges in Haunted Tomb will require only 1 tank each.
-    Results in minor graphical glitches."""
-    display_name = "Easy Tanks"
-
-class EasyTunnels(Toggle):
-    """Water tunnels in Seashell Shore and Dino Mines move slightly more slowly."""
-    display_name = "Easy Tunnels"
-
-class NoGreenRockets(Toggle):
-    """Collecting a green rocket in Scorch will automatically convert to 50 red rockets instead."""
-    display_name = "Convert Scorch Green Rockets to Red"
-
 class EnableTricks(OptionSet):
     """This option allows you to select from a set of supported tricks. For example, you can
     choose to have the logic potentially require you to enter Sunny Villa's Sheila sub-area from
@@ -486,6 +425,14 @@ class EnableTricks(OptionSet):
     separated list format. For example: ["sunny_sheila_early", "seashell_early"] would be a valid entry."""
     valid_keys = trick_options
     display_name = "Enable Tricks"
+
+class EnableEasyOptions(OptionSet):
+    """This option allows you to adjustment the difficulty of the game. For example, you can choose to only require 1
+    lizard in the Sunny Villa skateboarding challenges. A full list of supported options can be found at
+    https://github.com/seanstan95/S3AP/wiki/Difficulty-Adjustments. Your selections should be entered in a
+    comma separated list format. For example, ["easy_tanks", "easy_bluto"] would be a valid entry."""
+    valid_keys = difficulty_options
+    display_name = "Enable Easy Options"
 
 @dataclass
 class Spyro3Option(PerGameCommonOptions):
@@ -516,6 +463,8 @@ class Spyro3Option(PerGameCommonOptions):
     powerup_lock_settings: PowerupLockSettings
     enable_world_keys: EnableWorldKeys
     enable_tricks: EnableTricks
+    enable_easy_options: EnableEasyOptions
+    zoe_gives_hints: ZoeGivesHints
     enable_filler_extra_lives: EnableFillerExtraLives
     enable_filler_invincibility: EnableFillerInvincibility
     enable_filler_color_change: EnableFillerColorChange
@@ -527,21 +476,6 @@ class Spyro3Option(PerGameCommonOptions):
     enable_progressive_sparx_health: EnableProgressiveSparxHealth
     enable_progressive_sparx_logic: ProgressiveSparxHealthLogic
     require_sparx_for_max_gems: RequireSparxForMaxGems
-    zoe_gives_hints: ZoeGivesHints
-    easy_skateboarding_lizards: EasySkateboardingLizards
-    easy_skateboarding_points: EasySkateboardingPoints
-    easy_skateboarding_lost_fleet: EasySkateboardingLostFleet
-    easy_skateboarding_super_bonus_round: EasySkateboardingSuperBonusRound
-    easy_boxing: EasyBoxing
-    easy_sheila_bombing: EasySheilaBombing
-    easy_tanks: EasyTanks
-    easy_subs: EasySubs
-    easy_bluto: EasyBluto
-    easy_sleepyhead: EasySleepyhead
-    easy_shark_riders: EasySharkRiders
-    easy_whackamole: EasyWhackAMole
-    easy_tunnels: EasyTunnels
-    no_green_rockets: NoGreenRockets
 
 
 # Group logic/trick options together, especially for the local WebHost.
@@ -575,9 +509,15 @@ spyro_options_groups = [
             MoneybagsSettings,
             PowerupLockSettings,
             EnableWorldKeys,
-            EnableTricks
         ],
         False
+    ),
+    OptionGroup("Difficulty Adjustments",
+        [
+            EnableTricks,
+            EnableEasyOptions,
+            ZoeGivesHints
+        ]
     ),
     OptionGroup(
         "Item Pool",
@@ -600,27 +540,6 @@ spyro_options_groups = [
             EnableProgressiveSparxHealth,
             ProgressiveSparxHealthLogic,
             RequireSparxForMaxGems
-        ],
-        True
-    ),
-    OptionGroup(
-        "Game Difficulty",
-        [
-            ZoeGivesHints,
-            EasySkateboardingLizards,
-            EasySkateboardingPoints,
-            EasySkateboardingLostFleet,
-            EasySkateboardingSuperBonusRound,
-            EasyBoxing,
-            EasySheilaBombing,
-            EasyTanks,
-            EasySubs,
-            EasyBluto,
-            EasySleepyhead,
-            EasySharkRiders,
-            EasyWhackAMole,
-            EasyTunnels,
-            NoGreenRockets
         ],
         True
     ),
